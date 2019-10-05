@@ -1,0 +1,61 @@
+
+<div class="panel panel-primary">
+    <div class="panel-heading">最近更新</div>
+    <div class="panel-body">
+        <ul class="list-group">
+            {% for artcile in article_list %}
+                    <li ><a href="/{{ artcile.blog }}/article/{{ artcile.id }}.html">{{ artcile.title }}</a></li>
+           {% endfor %}
+        </ul>
+    </div>
+</div>
+{#            <div class="panel panel-danger">#}
+{#                <div class="panel-heading">文章档案</div>#}
+{#                {% for time in time_list %}#}
+{#                    <p>#}
+{#                        <a href="">#}
+{#                            {{ time.month|date:'Y年m月' }}#}
+{#                            ({{ time.c }})#}
+{#                        </a>#}
+{#                    </p>#}
+{#                {% endfor %}#}
+{#            </div>#}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">文章档案</div>
+    <div class="panel-group" id="accordion">
+
+        {% for time in time_list %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#nid_{{ time.month|date:'Y-m' }}">{{ time.month|date:'Y年m月' }}</a>
+                        <span id="" class="biaoqian">{{ time.c }}</span>
+
+
+                    </h4>
+
+                </div>
+
+                <div id="nid_{{ time.month|date:'Y-m' }}"  class="panel-collapse collapse">
+                    <div class="panel-body">
+                       <ul class="list-group">
+                           {% for artcile_one in time.article_detail_list %}
+                               <li ><a href="/{{ artcile_one.blog__site}}/article/{{ artcile_one.pk }}.html">{{ artcile_one.title }}</a></li>
+                           {% endfor %}
+
+                       </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+

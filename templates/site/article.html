@@ -1,0 +1,15 @@
+{% extends 'site/site_base.html' %}
+
+
+{% block content %}
+    <!-- 文章标题 -->
+
+    <h2 class="text-center">{{ article.title}}</h2>
+    <hr>
+    <div>
+        {{ article.article_detail.content|safe }}
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'backens/backend_base.html' %}
+
+{% block content %}
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">公开</a>
+            </li>
+
+            <li role ="presentation">
+                <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">私密</a>
+
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>评论</th>
+                        <th>点赞</th>
+                        <th>编辑</th>
+                        <th>删除</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for article in article_list  %}
+                            <tr>
+                                <td><a href="">{{ article.title }}</a></td>
+                                <td>0</td>
+                                <td>{{ article.up_count }}</td>
+                                <td>{{ article.down_count }}</td>
+                                <td><a href="">编辑</a></td>
+                                <td><a href="">删除</a></td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">56789</div>
+        </div>
+
+
+    </div>
+
+
+
+
+{% endblock %}

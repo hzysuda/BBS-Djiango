@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href="/static/bs-3.3.7/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/x-icon" href="/media/img/favicon.ico" />
+</head>
+<body>
+<div class="container col-md-offset-4 col-md-3">
+    <div class="panel-primary" style="margin-top: 100px;">
+        <div class="panel-heading" style="border-top-left-radius: 30px; border-top-right-radius: 30px;">
+            <h3 class="text-center">注册</h3>
+        </div>
+
+        <div class="panel-body bg-info" style="border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+            {#            <form action="{% url 'add_book' %}" method="post" class="form-horizontal" novalidate>#}
+            <form action="" method="" class="form form-horizontal">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username" class="control-label font-1 col-md-4 text-right">用户名：</label>
+                    <div class="col-md-6 input-div">
+                        <input type="text" id="username" placeholder="请输入用户名" class="form-control" name="username" required>
+                        <span class="pull-right" style="color: red; font-size: 12px;"><!--用户已存在--></span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="password" class="control-label font-1 col-md-4 text-right">密码：</label>
+                    <div class="col-md-6 input-div">
+                        <input placeholder="请输入密码" max="16" min="6" type="password" id="password" class="form-control" name="password"
+                               required>
+                        <span class="pull-right" style="color: red; font-size: 12px;"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="re_password" class="control-label font-1 col-md-4 text-right">确认密码：</label>
+                    <div class="col-md-6 input-div">
+                        <input placeholder="请输入确认密码" max="16" min="6" type="password" id="re_password" class="form-control" name="re_password"
+                               required>
+                        <span class="pull-right" style="color: red; font-size: 12px;"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="telephone" class="control-label font-1 col-md-4 text-right">手机号码：</label>
+                    <div class="col-md-6">
+                        <input placeholder="请输入电话号码" type="number" min="10000000000" max="99999999999" id="telephone" class="form-control"
+                               name="telephone" required>
+                        <span class="pull-right" style="color: red; font-size: 12px;"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email"  class="control-label font-1 col-md-4 text-right">邮箱：</label>
+                    <div class="col-md-6">
+                        <input type="email" placeholder="请输入邮箱地址" id="email" class="form-control" name="email" required>
+                        <span class="pull-right" style="color: red; font-size: 12px;"></span>
+                    </div>
+                </div>
+{#                <div class="form-group">#}
+{#                    <label for="avatar" class="text-center center-block">#}
+{#                        <img id='img-file' width="60" height="60" src="/static/img/user.png" alt="" title="个人头像">#}
+{#                    </label>#}
+{##}
+{#                    <div class="hidden">#}
+{#                        <input type="file" id="avatar">#}
+{#                    </div>#}
+{#                </div>#}
+
+                <div class="form-group">
+                    <input type="button" value="注册" class="register btn btn-primary col-md-4 col-md-offset-5">
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="register-info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+
+            <div class="modal-footer">
+                <button id="sure" type="button" class="btn btn-primary" data-dismiss="modal">确认
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="/static/bs-3.3.7/js/jquery-3.3.1.js"></script>
+<script src="/static/bs-3.3.7/js/bootstrap.js"></script>
+<script>
+    //选取图片展示
+    $('#avatar').change(function () {
+        //获取文件url地址
+        file = this.files[0];
+        reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            $('#img-file').attr('src',reader.result)
+        };
+
+    });
+
+    //获取焦点事件 所有.input-div input都有该事件
+    $('.input-div input').focus(function () {
+        $(this).next().text("")
+    });
+
+    //失去焦点事件
+    $('#username').blur(function () {
+        var username = $(this).val();
+        var _this = this;
+        if ((username.length > 20) || (username.length < 3)) {
+            $(this).next().text('字符长度4-20之间');
+            return 0;
+            }
+        if (username) {
+            $.ajax({
+                url: '/check_username/',
+                type: 'get',
+                data: {
+                    username: username
+                },
+                success: function (data) {
+                    console.log(data.msg)
+                    if (data.msg) {
+                        $(_this).next().text("账户已存在")
+                    }else if(data.msg ==0){
+                        $(_this).next().text("可以注册")
+                    }
+
+
+                }
+            })
+        }
+    })
+
+
+    //检测密码
+    $('#password').blur(function () {
+        var password = $(this).val();
+        var length = password.length;
+        if (length < 6) {
+            $(this).next().text('密码过短')
+        } else if (length > 16) {
+            $(this).next().text('密码过长')
+        }
+    });
+
+    //校队密码
+    $('#re_password').on('input', function () {
+        password = $('#password').val();
+        re_password = $(this).val();
+        console.log(password)
+        console.log(re_password)
+        if (password != re_password) {
+            $(this).next().text('密码不同')
+        } else {
+            $(this).next().text("")
+        }
+
+    });
+
+    //检测电话长度是否正确
+    $('#telephone').blur(function () {
+        var elephone_one = $(this).val();
+        var length = elephone_one.length;
+
+
+        if ((length != 11)&&(length !=0)) {
+            $(this).next().text('长度不正确')
+        }else {
+            $(this).next().text("")
+        }
+    });
+
+
+    //注册
+    $('.register').click(function () {
+
+        key_values = $('.form').serializeArray();
+
+        form_data = new FormData();
+        $.each(key_values, function (index, obj) {
+            // console.log(obj.name, obj.value)
+            form_data.append(obj.name, obj.value);  // 已经包含了csrftoken
+        });
+
+        avatar = $('#avatar')[0].files[0];
+
+
+        if (avatar){
+            console.log('111')
+            form_data.append('avatar',avatar)
+        }
+
+        $.ajax({
+            url: "/register/",
+            type: 'post',
+            data: form_data,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+              $('#register-info').modal('show');
+              $('#myModalLabel').text(data.msg);
+              if(data.status == 1){
+                  location.href= '/'
+              }
+
+
+            }
+
+        })
+
+    })
+
+
+</script>
+
+
+</html>
+
+
